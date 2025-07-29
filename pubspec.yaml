@@ -1,0 +1,34 @@
+name: task_manager
+description: "A task manager project."
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_svg: ^2.0.10
+  email_validator: ^3.0.0
+  pin_code_fields: ^8.0.1
+  image_picker: ^1.1.2
+  http: ^1.4.0
+  shared_preferences: ^2.5.3
+  intl: ^0.18.1
+#  get_phone_number: ^3.0.10
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/logo.svg
+    - assets/images/background.svg
