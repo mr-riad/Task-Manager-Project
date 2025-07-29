@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/ui/screens/new_task_list.dart';
-import '../../widget/TDAppBar.dart';
+import '../widget/td_app_bar.dart';
 import 'Add_new_task_screen.dart';
 import 'canceled_task_list.dart';
 import 'completed_task_list.dart';

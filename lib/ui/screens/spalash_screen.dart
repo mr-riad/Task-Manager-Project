@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import '../../Controller/Auth_controller.dart';
+import '../utils/assets_path.dart';
+import '../widget/screen_background.dart';
+import 'Sign_in_screen.dart';
 import 'main_navbar_screen.dart';
 
 class SpalashScreen extends StatefulWidget {

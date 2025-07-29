@@ -7,10 +7,10 @@ import 'package:task_manager/Model/User_Model.dart';
 import 'package:task_manager/ui/utils/urls.dart';
 import '../../Controller/Auth_controller.dart';
 import '../../Network/network_caller.dart';
-import '../../widget/Center_circular_progress_bar.dart';
-import '../../widget/ScreenBackground.dart';
-import '../../widget/Snackbar_Messages.dart';
-import '../../widget/TDAppBar.dart';
+import '../widget/Center_circular_progress_bar.dart';
+import '../widget/Snackbar_Messages.dart';
+import '../widget/screen_background.dart';
+import '../widget/td_app_bar.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
   const UpdateProfileScreen({super.key});

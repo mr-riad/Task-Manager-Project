@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:task_manager/Network/network_caller.dart';
 import 'package:task_manager/ui/screens/Sign_in_screen.dart';
 import 'package:task_manager/ui/utils/urls.dart';
-import 'package:task_manager/widget/ScreenBackground.dart';
-import '../../widget/Center_circular_progress_bar.dart';
-import '../../widget/Snackbar_Messages.dart';
+import '../widget/Center_circular_progress_bar.dart';
+import '../widget/Snackbar_Messages.dart';
+import '../widget/screen_background.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});

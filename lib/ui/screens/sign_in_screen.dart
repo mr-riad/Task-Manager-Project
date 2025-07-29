@@ -4,13 +4,14 @@ import 'package:task_manager/Controller/Auth_controller.dart';
 import 'package:task_manager/Model/User_Model.dart';
 import 'package:task_manager/ui/screens/main_navbar_screen.dart';
 import 'package:task_manager/ui/screens/EmailVarification.dart';
-import 'package:task_manager/widget/ScreenBackground.dart';
+import 'package:task_manager/ui/screens/sign_up_screen.dart';
 import 'package:email_validator/email_validator.dart';
 import '../../Network/network_caller.dart';
-import '../../widget/Center_circular_progress_bar.dart';
-import '../../widget/Snackbar_Messages.dart';
 import '../utils/urls.dart';
-import 'SignUpScreen.dart';
+import '../widget/Center_circular_progress_bar.dart';
+import '../widget/Snackbar_Messages.dart';
+import '../widget/screen_background.dart';
+
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -35,7 +36,7 @@ class _SignInScreenState extends State<SignInScreen> {
       body: ScreenBackground(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsetsGeometry.all(20),
+            padding: EdgeInsets.all(25),
             child: Form(
               key: _formKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,

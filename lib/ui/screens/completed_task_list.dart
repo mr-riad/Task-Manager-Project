@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/ui/utils/urls.dart';
-import 'package:task_manager/widget/Center_circular_progress_bar.dart';
 import '../../Model/Task_Model.dart';
 import '../../Model/Task_Status_Count_Model.dart';
 import '../../Network/network_caller.dart';
-import '../../widget/Snackbar_Messages.dart';
-import '../../widget/Task_card.dart';
-import '../../widget/Task_count_summary_card.dart';
-import '../utils/DateFormat.dart';
-import 'Show_Task_Details.dart';
+import '../utils/date_format.dart';
+import '../widget/Center_circular_progress_bar.dart';
+import '../widget/Snackbar_Messages.dart';
+import '../widget/task_card.dart';
+import '../widget/task_count_summary_card.dart';
+import 'show_task_details.dart';
 
 class CompletedTaskList extends StatefulWidget {
   const CompletedTaskList({super.key});

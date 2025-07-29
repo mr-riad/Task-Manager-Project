@@ -3,12 +3,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_manager/ui/screens/EmailPinVarification.dart';
-import 'package:task_manager/widget/Center_circular_progress_bar.dart';
 import '../../Model/Verification_Data_Model.dart';
 import '../../Network/network_caller.dart';
-import '../../widget/ScreenBackground.dart';
-import '../../widget/Snackbar_Messages.dart';
 import '../utils/urls.dart';
+import '../widget/Center_circular_progress_bar.dart';
+import '../widget/Snackbar_Messages.dart';
+import '../widget/screen_background.dart';
 import 'Sign_in_screen.dart';
 
 class Emailvarification extends StatefulWidget {
@@ -31,7 +31,7 @@ class _EmailvarificationState extends State<Emailvarification> {
       body: ScreenBackground(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsetsGeometry.all(25),
+            padding: EdgeInsets.all(25),
             child: Form(
               key: _key,
               autovalidateMode: AutovalidateMode.onUserInteraction,

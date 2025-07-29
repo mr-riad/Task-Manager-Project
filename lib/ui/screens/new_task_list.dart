@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:task_manager/Model/Task_Model.dart';
 import 'package:task_manager/Model/Task_Status_Count_Model.dart';
 import 'package:task_manager/Network/network_caller.dart';
-import 'package:task_manager/widget/Center_circular_progress_bar.dart';
-import '../../widget/Snackbar_Messages.dart';
-import '../../widget/Task_card.dart';
-import '../../widget/Task_count_summary_card.dart';
-import '../utils/DateFormat.dart';
+import '../utils/date_format.dart';
 import '../utils/urls.dart';
-import 'Show_Task_Details.dart';
+import '../widget/Center_circular_progress_bar.dart';
+import '../widget/Snackbar_Messages.dart';
+import '../widget/task_card.dart';
+import '../widget/task_count_summary_card.dart';
+import 'show_task_details.dart';
 
 class NewTaskList extends StatefulWidget {
   const NewTaskList({super.key});

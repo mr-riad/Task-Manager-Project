@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/ui/screens/Add_new_task_screen.dart';
+import 'package:task_manager/ui/screens/EmailVarification.dart';
+import 'package:task_manager/ui/screens/main_navbar_screen.dart';
+import 'package:task_manager/ui/screens/sign_up_screen.dart';
+import 'package:task_manager/ui/screens/spalash_screen.dart';
+import 'package:task_manager/ui/screens/update_profile_screen.dart';
 
 import '../ui/screens/EmailPinVarification.dart';
 import '../ui/screens/SetPassword.dart';

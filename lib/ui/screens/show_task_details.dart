@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/widget/TDAppBar.dart';
+import '../widget/td_app_bar.dart';
 
 class ShowTaskDetails extends StatelessWidget {
   final String title;
