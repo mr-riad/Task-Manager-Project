@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/Model/Task_Model.dart';
-import 'package:task_manager/Network/network_caller.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:task_manager/ui/screens/show_task_details.dart';
 import 'package:task_manager/ui/utils/urls.dart';
-import '../../Model/Task_Status_Count_Model.dart';
+import '../../controller/cancelled_task_list_controller.dart';
+import '../../controller/task_count_summary_controller.dart';
 import '../utils/date_format.dart';
-import '../widget/Center_circular_progress_bar.dart';
-import '../widget/Snackbar_Messages.dart';
+import '../widget/center_circular_progress_bar.dart';
 import '../widget/task_card.dart';
 import '../widget/task_count_summary_card.dart';
-import 'show_task_details.dart';
 
 class CanceledTaskList extends StatefulWidget {
   const CanceledTaskList({super.key});
@@ -18,17 +19,12 @@ class CanceledTaskList extends StatefulWidget {
 }
 
 class _CanceledTaskListState extends State<CanceledTaskList> {
-  List<TaskModel> _canceledTaskList = [];
-  bool _CancelledTaskisLoading = false;
-  bool _taskCountSummaryLoading = false;
-  List<TaskStatusCountModel> _taskCountSummaryList = [];
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _getCancelledTaskList();
-      _getTaskCountSummary();
+      Get.find<CancelledTaskListController>().getCancelledTaskList();
+      Get.find<TaskCountSummaryController>().getTaskCountSummary();
     });
   }
 
@@ -40,137 +36,89 @@ class _CanceledTaskListState extends State<CanceledTaskList> {
         child: Column(
           children: [
             const SizedBox(height: 16),
-            Visibility(
-              visible: _taskCountSummaryLoading == false,
-              replacement: CenteredCircularProgressIndicator(),
-              child: SizedBox(
-                height: 100,
-                child: ListView.separated(
-                  itemCount: _taskCountSummaryList.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return TaskCountSummaryCard(
-                      title: _taskCountSummaryList[index].sId!,
-                      count: _taskCountSummaryList[index].sum!,
-                    );
-                  },
-                  separatorBuilder: (context, index) =>
-                  const SizedBox(width: 4),
-                ),
-              ),
+            GetBuilder<TaskCountSummaryController>(
+              builder: (controller) {
+                return Visibility(
+                  visible: controller.isLoading == false,
+                  replacement: CenteredCircularProgressIndicator(),
+                  child: SizedBox(
+                    height: 100,
+                    child: ListView.separated(
+                      itemCount: controller.taskCountSummaryList.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return TaskCountSummaryCard(
+                          title: controller.taskCountSummaryList[index].sId!,
+                          count: controller.taskCountSummaryList[index].sum!,
+                        );
+                      },
+                      separatorBuilder: (context, index) =>
+                      const SizedBox(width: 4),
+                    ),
+                  ),
+                );
+              },
             ),
-            Visibility(
-              visible: _CancelledTaskisLoading == false,
-              replacement: CenteredCircularProgressIndicator(),
-              child: Expanded(
-                child: ListView.builder(
-                  itemCount: _canceledTaskList.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => ShowTaskDetails(
-                              title: _canceledTaskList[index].title!,
-                              description:
-                              _canceledTaskList[index].description!,
-                              createdDate: formatDate(
-                                _canceledTaskList[index].createdDate!,
+            GetBuilder<CancelledTaskListController>(
+              builder: (controller) {
+                return Visibility(
+                  visible: controller.isLoading == false,
+                  replacement: CenteredCircularProgressIndicator(),
+                  child: Expanded(
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(bottom: 70),
+                      itemCount: controller.cancelledTaskList.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ShowTaskDetails(
+                                  title: controller
+                                      .cancelledTaskList[index]
+                                      .title!,
+                                  description: controller
+                                      .cancelledTaskList[index]
+                                      .description!,
+                                  createdDate: formatDate(
+                                    controller
+                                        .cancelledTaskList[index]
+                                        .createdDate!,
+                                  ),
+                                  status: controller
+                                      .cancelledTaskList[index]
+                                      .status!,
+                                ),
                               ),
-                              status: _canceledTaskList[index].status!,
-                            ),
+                            );
+                          },
+                          child: TaskCard(
+                            taskType: TaskType.cancelled,
+                            taskModel: controller.cancelledTaskList[index],
+                            onTaskStatusUpdated: () {
+                              Get.find<TaskCountSummaryController>()
+                                  .getTaskCountSummary();
+                              Get.find<CancelledTaskListController>()
+                                  .getCancelledTaskList();
+                            },
+                            onDeleteTask: () {
+                              Get.find<TaskCountSummaryController>()
+                                  .getTaskCountSummary();
+                              Get.find<CancelledTaskListController>()
+                                  .getCancelledTaskList();
+                            },
                           ),
                         );
                       },
-                      child: TaskCard(
-                        taskType: TaskType.cancelled,
-                        taskModel: _canceledTaskList[index],
-                        onTaskStatusUpdated: () {
-                          _getTaskCountSummary();
-                          _getCancelledTaskList();
-                        },
-                        onDeleteTask: () {
-                          _getTaskCountSummary();
-                          _getCancelledTaskList();
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),
       ),
     );
-  }
-
-  Future<void> _getCancelledTaskList() async {
-    _CancelledTaskisLoading = true;
-    if (mounted) {
-      setState(() {});
-    }
-
-    NetworkResponse response = await networkCaller.getRequest(
-      url: urls.CancelledTasksUrl,
-    );
-
-    if (response.isSuccess) {
-      _CancelledTaskisLoading = true;
-      final List<TaskModel> list = [];
-
-      for (Map<String, dynamic> jsonData in response.body!['data']) {
-        list.add(TaskModel.fromJson(jsonData));
-      }
-      _canceledTaskList = list;
-    } else {
-      if (mounted) {
-        showSnackBarMessage(
-          context,
-          'Failed to load cancelled tasks: ${response.errorMessage!}',
-        );
-      }
-    }
-
-    _CancelledTaskisLoading = false;
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  Future<void> _getTaskCountSummary() async {
-    _taskCountSummaryLoading = true;
-
-    if (mounted) {
-      setState(() {});
-    }
-
-    NetworkResponse response = await networkCaller.getRequest(
-      url: urls.GetAllTasksUrl,
-    );
-
-    if (response.isSuccess) {
-      List<TaskStatusCountModel> list = [];
-      for (Map<String, dynamic> jsonData in response.body!['data']) {
-        list.add(TaskStatusCountModel.fromJson(jsonData));
-      }
-      list.sort((a, b) => b.sum!.compareTo(a.sum!));
-      _taskCountSummaryList = list;
-    } else {
-      if (mounted) {
-        showSnackBarMessage(context, response.errorMessage!);
-      }
-    }
-
-    _taskCountSummaryLoading = false;
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }

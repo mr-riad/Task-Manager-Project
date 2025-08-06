@@ -1,10 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:task_manager/Controller/Auth_controller.dart';
-import 'package:task_manager/ui/screens/Sign_in_screen.dart';
+import 'package:task_manager/ui/widget/snackbar_messages.dart';
+import '../../controller/auth_controller.dart';
+import '../screens/sign_in_screen.dart';
 import '../screens/update_profile_screen.dart';
-import 'Snackbar_Messages.dart';
 
 class TDAppBar extends StatefulWidget implements PreferredSizeWidget {
   const TDAppBar({super.key});

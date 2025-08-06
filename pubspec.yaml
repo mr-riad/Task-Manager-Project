@@ -19,6 +19,7 @@ dependencies:
   http: ^1.4.0
   shared_preferences: ^2.5.3
   intl: ^0.18.1
+  get: ^4.7.2
 #  get_phone_number: ^3.0.10
 
 dev_dependencies:

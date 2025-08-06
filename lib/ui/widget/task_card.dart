@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/ui/utils/urls.dart';
-import '../../Model/Task_Model.dart';
-import '../../Network/network_caller.dart';
-import '../utils/date_format.dart';
-import 'Center_circular_progress_bar.dart';
-import 'Snackbar_Messages.dart';
+import 'package:task_manager/ui/widget/snackbar_messages.dart';
 
+import '../../model/task_model.dart';
+import '../../network/network_caller.dart';
+import '../utils/date_format.dart';
+import 'center_circular_progress_bar.dart';
 enum TaskType { tNew, progress, completed, cancelled }
 
 class TaskCard extends StatefulWidget {

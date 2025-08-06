@@ -1,10 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:task_manager/Controller/Auth_controller.dart';
-import 'package:task_manager/ui/screens/Sign_in_screen.dart';
-
 import '../app.dart';
+import '../controller/auth_controller.dart';
+import '../ui/screens/sign_in_screen.dart';
 
 class NetworkResponse {
   final bool isSuccess;

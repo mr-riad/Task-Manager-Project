@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import '../../Controller/Auth_controller.dart';
-import '../utils/assets_path.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:task_manager/ui/screens/sign_in_screen.dart';
+import 'package:task_manager/ui/utils/assets_path.dart';
+import '../../controller/auth_controller.dart';
 import '../widget/screen_background.dart';
-import 'Sign_in_screen.dart';
 import 'main_navbar_screen.dart';
 
 class SpalashScreen extends StatefulWidget {
@@ -19,12 +19,11 @@ class _SpalashScreenState extends State<SpalashScreen> {
   @override
   initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _moveToNextScreen();
-    });
+    _moveToNextScreen();
   }
 
   Future<void> _moveToNextScreen() async {
+
     await Future.delayed(Duration(seconds: 2));
     bool isLoggedIn = await AuthController.isUserLoggedIn();
     if (isLoggedIn) {

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/Model/Task_Status_Count_Model.dart';
-import 'package:task_manager/Network/network_caller.dart';
-import '../../Model/Task_Model.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:task_manager/ui/screens/show_task_details.dart';
+import '../../controller/progress_task_list_controller.dart';
+import '../../controller/task_count_summary_controller.dart';
 import '../utils/date_format.dart';
-import '../utils/urls.dart';
-import '../widget/Center_circular_progress_bar.dart';
-import '../widget/Snackbar_Messages.dart';
+import '../widget/center_circular_progress_bar.dart';
 import '../widget/task_card.dart';
 import '../widget/task_count_summary_card.dart';
-import 'show_task_details.dart';
 
 class ProgressTaskList extends StatefulWidget {
   const ProgressTaskList({super.key});
@@ -18,17 +18,12 @@ class ProgressTaskList extends StatefulWidget {
 }
 
 class _ProgressTaskListState extends State<ProgressTaskList> {
-  bool _ProgressTaskisLoading = false;
-  List<TaskModel> _progressTaskList = [];
-  bool _taskCountSummaryLoading = false;
-  List<TaskStatusCountModel> _taskCountSummaryList = [];
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _getProgressTaskList();
-      _getTaskCountSummary();
+      Get.find<ProgressTaskListController>().getProgressTaskList();
+      Get.find<TaskCountSummaryController>().getTaskCountSummary();
     });
   }
 
@@ -40,131 +35,88 @@ class _ProgressTaskListState extends State<ProgressTaskList> {
         child: Column(
           children: [
             const SizedBox(height: 16),
-            Visibility(
-              visible: _taskCountSummaryLoading == false,
-              replacement: CenteredCircularProgressIndicator(),
-              child: SizedBox(
-                height: 100,
-                child: ListView.separated(
-                  itemCount: _taskCountSummaryList.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return TaskCountSummaryCard(
-                      title: _taskCountSummaryList[index].sId!,
-                      count: _taskCountSummaryList[index].sum!,
-                    );
-                  },
-                  separatorBuilder: (context, index) =>
-                  const SizedBox(width: 4),
-                ),
-              ),
+            GetBuilder<TaskCountSummaryController>(
+              builder: (controller) {
+                return Visibility(
+                  visible: controller.isLoading == false,
+                  replacement: CenteredCircularProgressIndicator(),
+                  child: SizedBox(
+                    height: 100,
+                    child: ListView.separated(
+                      itemCount: controller.taskCountSummaryList.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return TaskCountSummaryCard(
+                          title: controller.taskCountSummaryList[index].sId!,
+                          count: controller.taskCountSummaryList[index].sum!,
+                        );
+                      },
+                      separatorBuilder: (context, index) =>
+                      const SizedBox(width: 4),
+                    ),
+                  ),
+                );
+              },
             ),
-            Visibility(
-              visible: _ProgressTaskisLoading == false,
-              replacement: CenteredCircularProgressIndicator(),
-              child: Expanded(
-                child: ListView.builder(
-                  itemCount: _progressTaskList.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => ShowTaskDetails(
-                              title: _progressTaskList[index].title!,
-                              description:
-                              _progressTaskList[index].description!,
-                              createdDate: formatDate(
-                                _progressTaskList[index].createdDate!,
+            GetBuilder<ProgressTaskListController>(
+              builder: (controller) {
+                return Visibility(
+                  visible: controller.isLoading == false,
+                  replacement: CenteredCircularProgressIndicator(),
+                  child: Expanded(
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(bottom: 70),
+                      itemCount: controller.progressTaskList.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ShowTaskDetails(
+                                  title:
+                                  controller.progressTaskList[index].title!,
+                                  description: controller
+                                      .progressTaskList[index]
+                                      .description!,
+                                  createdDate: formatDate(
+                                    controller
+                                        .progressTaskList[index]
+                                        .createdDate!,
+                                  ),
+                                  status: controller
+                                      .progressTaskList[index]
+                                      .status!,
+                                ),
                               ),
-                              status: _progressTaskList[index].status!,
-                            ),
+                            );
+                          },
+                          child: TaskCard(
+                            taskType: TaskType.progress,
+                            taskModel: controller.progressTaskList[index],
+                            onTaskStatusUpdated: () {
+                              Get.find<TaskCountSummaryController>()
+                                  .getTaskCountSummary();
+                              Get.find<ProgressTaskListController>()
+                                  .getProgressTaskList();
+                            },
+                            onDeleteTask: () {
+                              Get.find<TaskCountSummaryController>()
+                                  .getTaskCountSummary();
+                              Get.find<ProgressTaskListController>()
+                                  .getProgressTaskList();
+                            },
                           ),
                         );
                       },
-                      child: TaskCard(
-                        taskType: TaskType.progress,
-                        taskModel: _progressTaskList[index],
-                        onTaskStatusUpdated: () {
-                          _getTaskCountSummary();
-                          _getProgressTaskList();
-                        },
-                        onDeleteTask: () {
-                          _getTaskCountSummary();
-                          _getProgressTaskList();
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),
       ),
     );
-  }
-
-  Future<void> _getProgressTaskList() async {
-    _ProgressTaskisLoading = true;
-    if (mounted) {
-      setState(() {});
-    }
-    NetworkResponse response = await networkCaller.getRequest(
-      url: urls.ProgressTasksUrl,
-    );
-
-    if (response.isSuccess) {
-      List<TaskModel> list = [];
-
-      for (Map<String, dynamic> jsonData in response.body!['data']) {
-        list.add(TaskModel.fromJson(jsonData));
-      }
-      _progressTaskList = list;
-    } else {
-      if (mounted) {
-        showSnackBarMessage(context, response.errorMessage!);
-      }
-    }
-    _ProgressTaskisLoading = false;
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  Future<void> _getTaskCountSummary() async {
-    _taskCountSummaryLoading = true;
-
-    if (mounted) {
-      setState(() {});
-    }
-
-    NetworkResponse response = await networkCaller.getRequest(
-      url: urls.GetAllTasksUrl,
-    );
-
-    if (response.isSuccess) {
-      List<TaskStatusCountModel> list = [];
-      for (Map<String, dynamic> jsonData in response.body!['data']) {
-        list.add(TaskStatusCountModel.fromJson(jsonData));
-      }
-      list.sort((a, b) => b.sum!.compareTo(a.sum!));
-      _taskCountSummaryList = list;
-    } else {
-      if (mounted) {
-        showSnackBarMessage(context, response.errorMessage!);
-      }
-    }
-
-    _taskCountSummaryLoading = false;
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }

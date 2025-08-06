@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../Model/User_Model.dart';
+import '../model/user_model.dart';
 
 class AuthController {
   static UserModel? userModel;

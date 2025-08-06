@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/ui/screens/new_task_list.dart';
+import 'package:task_manager/ui/screens/progress_task_list.dart';
+import '../utils/urls.dart';
 import '../widget/td_app_bar.dart';
-import 'Add_new_task_screen.dart';
+import 'add_new_task_screen.dart';
 import 'canceled_task_list.dart';
 import 'completed_task_list.dart';
-import 'Progress_task_list.dart';
 
 class MainNavbarScreen extends StatefulWidget {
   const MainNavbarScreen({super.key});
@@ -46,7 +47,6 @@ class _MainNavbarScreenState extends State<MainNavbarScreen> {
           NavigationDestination(
             icon: Icon(Icons.arrow_circle_right_outlined),
             label: 'Progress',
-
           ),
           NavigationDestination(icon: Icon(Icons.done), label: 'Completed'),
           NavigationDestination(icon: Icon(Icons.close), label: 'Cancelled'),

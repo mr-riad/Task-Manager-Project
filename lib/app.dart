@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/ui/screens/Add_new_task_screen.dart';
-import 'package:task_manager/ui/screens/EmailVarification.dart';
+import 'package:get/get.dart';
+import 'package:task_manager/ui/screens/add_new_task_screen.dart';
+import 'package:task_manager/ui/screens/emailPinVarification.dart';
+import 'package:task_manager/ui/screens/emailVarification.dart';
 import 'package:task_manager/ui/screens/main_navbar_screen.dart';
+import 'package:task_manager/ui/screens/setPassword.dart';
+import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'package:task_manager/ui/screens/sign_up_screen.dart';
 import 'package:task_manager/ui/screens/spalash_screen.dart';
 import 'package:task_manager/ui/screens/update_profile_screen.dart';
-
-import '../ui/screens/EmailPinVarification.dart';
-import '../ui/screens/SetPassword.dart';
-import '../ui/screens/Sign_in_screen.dart';
 import '../ui/screens/new_task_list.dart';
+import 'controller_binder/controller_binder.dart';
 
 class TaskManager extends StatefulWidget {
   const TaskManager({super.key});
@@ -23,7 +24,7 @@ class TaskManager extends StatefulWidget {
 class _TaskManagerState extends State<TaskManager> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       navigatorKey: TaskManager.navigator,
       theme: ThemeData(
@@ -79,6 +80,7 @@ class _TaskManagerState extends State<TaskManager> {
         NewTaskList.name: (context) => NewTaskList(),
         AddNewTaskScreen.name: (context) => AddNewTaskScreen(),
       },
+      initialBinding: ControllerBinder(),
     );
   }
 }
